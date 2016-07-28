@@ -9,6 +9,7 @@ let s:hook = {
 \   'config': {
 \     'encoding': '&fileencoding',
 \     'fileformat': '',
+\     'remove_empty': 0,
 \   },
 \  '_fileformats': {'unix': "\n", 'dos': "\r\n", 'mac': "\r"},
 \ }
@@ -41,6 +42,9 @@ function! s:hook.on_output(session, context) abort
   endif
   if self._eol !=# ''
     let data = substitute(data, '\r\n\?\|\n', self._eol, 'g')
+  endif
+  if self.config.remove_empty
+    let data = substitute(data, '\n\{2,}', '\n', 'g')
   endif
   let a:context.data = data
 endfunction
